@@ -11,7 +11,7 @@ import (
 )
 
 func run() string {
-	command := exec.Command("/usr/local/bin/nmap", "aisstaging.vesseltracker.com")
+	command := exec.Command("/usr/local/bin/nmap", "my.site")
 	var stdout bytes.Buffer
 	command.Stdout = &stdout
 	var stderr bytes.Buffer
