@@ -11,7 +11,7 @@ import (
 )
 
 func run() string {
-	command := exec.Command("/usr/local/bin/nmap", "my.site")
+	command := exec.Command("nmap", "-T4", "-F", "my.host")
 	var stdout bytes.Buffer
 	command.Stdout = &stdout
 	var stderr bytes.Buffer
@@ -63,10 +63,38 @@ func convertStringToInt(ports string) []int {
 	return portsInteger
 }
 
+func compare(expectedPorts []int, foundPorts []int) {
+	for _, value := range foundPorts {
+		if !containsPort(value, expectedPorts) {
+			fmt.Println(value)
+		}
+	}
+}
+
+func containsPort(port int, expectedPorts []int) bool {
+	for _, value := range expectedPorts {
+		if value == port {
+			return true
+		}
+	}
+
+	return false
+}
+
 func main() {
 	output := run()
 	openPorts := grep(output)
 	v := convertStringToInt(openPorts)
 
-	fmt.Println(v)
+	openPortsConfiguration := []int{
+		22,
+		443,
+		9999,
+	}
+
+	//fmt.Println(v)
+	//
+	//fmt.Print(openPortsConfiguration)
+
+	compare(openPortsConfiguration, v)
 }
