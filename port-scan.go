@@ -63,12 +63,19 @@ func convertStringToInt(ports string) []int {
 	return portsInteger
 }
 
-func compare(expectedPorts []int, foundPorts []int) {
-	for _, value := range foundPorts {
-		if !containsPort(value, expectedPorts) {
+func analyseResults(expectedPorts []int, foundPorts []int) {
+
+}
+
+func compare(data1 []int, data2 []int) []int {
+	result := make(map[int]int)
+	for _, value := range data2 {
+		if !containsPort(value, data1) {
+			result = append(result, value)
 			fmt.Println(value)
 		}
 	}
+	return result
 }
 
 func containsPort(port int, expectedPorts []int) bool {
