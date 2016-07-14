@@ -11,7 +11,7 @@ import (
 )
 
 func run() string {
-	command := exec.Command("nmap", "-T4", "-F", "my.host")
+	command := exec.Command("nmap", /*"-T4", "-F", */ "my.host")
 	var stdout bytes.Buffer
 	command.Stdout = &stdout
 	var stderr bytes.Buffer
@@ -63,35 +63,54 @@ func convertStringToInt(ports string) []int {
 	return portsInteger
 }
 
-func analyseResults(expectedPorts []int, foundPorts []int) {
-
+func analyseResults(expectedPorts []int, foundPorts []int) ([]int, []int) {
+	expectedUnfound := compare(expectedPorts, foundPorts)
+	unexpectedFound := compare(foundPorts, expectedPorts)
+	return expectedUnfound, unexpectedFound
 }
 
-func compare(data1 []int, data2 []int) []int {
-	result := make(map[int]int)
-	for _, value := range data2 {
-		if !containsPort(value, data1) {
-			result = append(result, value)
-			fmt.Println(value)
-		}
-	}
-	return result
-}
-
-func containsPort(port int, expectedPorts []int) bool {
-	for _, value := range expectedPorts {
-		if value == port {
-			return true
-		}
+func compare(X, Y []int) []int {
+	counts := make(map[int]int)
+	var total int
+	for _, value := range X {
+		counts[value]++
+		total++
 	}
 
-	return false
+	for _, value := range Y {
+		if _, ok := counts[value]; ok {
+			counts[value]--
+			total--
+			if counts[value] <= 0 {
+				delete(counts, value)
+			}
+		}
+	}
+
+	difference := make([]int, total)
+	i := 0
+	for value, count := range counts {
+		for j := 0; j < count; j++ {
+			difference[i] = value
+			i++
+		}
+	}
+	return difference
 }
+
 
 func main() {
 	output := run()
+
+	//fmt.Println(output)
+
 	openPorts := grep(output)
+
+	fmt.Println(openPorts)
+
 	v := convertStringToInt(openPorts)
+
+	fmt.Println(v)
 
 	openPortsConfiguration := []int{
 		22,
@@ -103,5 +122,8 @@ func main() {
 	//
 	//fmt.Print(openPortsConfiguration)
 
-	compare(openPortsConfiguration, v)
+	expectedUnfound, unexpectedFound := analyseResults(openPortsConfiguration, v)
+
+	fmt.Print(expectedUnfound)
+	fmt.Println(unexpectedFound)
 }
