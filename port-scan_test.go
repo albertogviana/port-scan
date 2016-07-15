@@ -80,3 +80,40 @@ func TestConvertStringToInt(t *testing.T) {
 		}
 	}
 }
+
+// compare
+type testComparePorts struct {
+	expected        []int
+	found           []int
+	expectedUnfound []int
+	unexpectedFound []int
+}
+
+//// expected, found, expectedUnfound, unexpectedFound
+var comparePortsTests = []testComparePorts{
+	{[]int{80, 443, 5432}, []int{80, 443}, []int{5432}, []int{}},
+	{[]int{80, 443, 5432}, []int{80, 443, 9876}, []int{5432}, []int{9876}},
+
+	{[]int{80, 443}, []int{80, 443, 5432}, []int{}, []int{5432}},
+	{[]int{443, 80}, []int{80, 443, 5432}, []int{}, []int{5432}},
+	{[]int{443, 80}, []int{5432, 443, 80}, []int{}, []int{5432}},
+
+	{[]int{80, 443}, []int{443, 80}, []int{}, []int{}},
+	{[]int{80, 443}, []int{80, 443}, []int{}, []int{}},
+}
+
+func TestComparePorts(t *testing.T) {
+	for _, test := range comparePortsTests {
+		expectedUnfound, unexpectedFound := analyseResults(test.expected, test.found)
+		foundEuf := fmt.Sprintf("%v", expectedUnfound) != fmt.Sprintf("%v", test.expectedUnfound)
+		foundUef := fmt.Sprintf("%v", unexpectedFound) != fmt.Sprintf("%v", test.unexpectedFound)
+		if foundEuf || foundUef {
+			t.Error(
+				"For", test.expected, "and", test.found,
+				"expected", test.expectedUnfound, "and", test.unexpectedFound,
+				"got", expectedUnfound, "and", unexpectedFound,
+			)
+		}
+	}
+}
+

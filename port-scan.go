@@ -10,8 +10,8 @@ import (
 	"strings"
 )
 
-func run() string {
-	command := exec.Command("nmap", /*"-T4", "-F", */ "my.host")
+func run(host string) string {
+	command := exec.Command("nmap", host)
 	var stdout bytes.Buffer
 	command.Stdout = &stdout
 	var stderr bytes.Buffer
@@ -98,19 +98,33 @@ func compare(X, Y []int) []int {
 	return difference
 }
 
+func message(expectedUnfoundPorts []int, unexpectedFoundPorts []int) string {
+	var message string
+
+	if len(expectedUnfoundPorts) > 0 {
+		message += fmt.Sprintf(
+			"The following ports were found filtered but were expected to be unfiltered:\n%d.\n\n",
+			expectedUnfoundPorts,
+		)
+	}
+
+	if len(unexpectedFoundPorts) > 0 {
+		message += fmt.Sprintf(
+			"The following ports were found unfiltered and are not part of the expected set:\n%d.\n\n",
+			unexpectedFoundPorts,
+		)
+	}
+
+	return message
+}
 
 func main() {
-	output := run()
-
-	//fmt.Println(output)
+	host := ""
+	output := run(host)
 
 	openPorts := grep(output)
 
-	fmt.Println(openPorts)
-
 	v := convertStringToInt(openPorts)
-
-	fmt.Println(v)
 
 	openPortsConfiguration := []int{
 		22,
@@ -118,12 +132,9 @@ func main() {
 		9999,
 	}
 
-	//fmt.Println(v)
-	//
-	//fmt.Print(openPortsConfiguration)
-
 	expectedUnfound, unexpectedFound := analyseResults(openPortsConfiguration, v)
 
-	fmt.Print(expectedUnfound)
-	fmt.Println(unexpectedFound)
+	message := message(expectedUnfound, unexpectedFound)
+	fmt.Print(message)
+
 }
