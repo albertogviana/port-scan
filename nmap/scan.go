@@ -1,4 +1,4 @@
-package main
+package nmap
 
 import (
 	"bytes"
@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func run(host string) string {
+func Run(host string) string {
 	command := exec.Command("nmap", host)
 	var stdout bytes.Buffer
 	command.Stdout = &stdout
@@ -33,7 +33,7 @@ func run(host string) string {
 	return stdOut
 }
 
-func grep(output string) string {
+func Grep(output string) string {
 	portsRegex := regexp.MustCompilePOSIX("^[0-9]*")
 	return strings.Join(removeEmptyStrings(portsRegex.FindAllString(output, -1)), " ")
 }
@@ -116,25 +116,4 @@ func message(expectedUnfoundPorts []int, unexpectedFoundPorts []int) string {
 	}
 
 	return message
-}
-
-func main() {
-	host := ""
-	output := run(host)
-
-	openPorts := grep(output)
-
-	v := convertStringToInt(openPorts)
-
-	openPortsConfiguration := []int{
-		22,
-		443,
-		9999,
-	}
-
-	expectedUnfound, unexpectedFound := analyseResults(openPortsConfiguration, v)
-
-	message := message(expectedUnfound, unexpectedFound)
-	fmt.Print(message)
-
 }
