@@ -2,7 +2,6 @@ package nmap
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"os/exec"
 	"regexp"
@@ -10,6 +9,14 @@ import (
 	"strings"
 )
 
+// Nmap interface
+type Nmap interface {
+	Run(host string)
+	Parse(output string)
+	AnalyseResults(expectedPorts []int, foundPorts []int)
+}
+
+// Run the nmap command
 func Run(host string) string {
 	command := exec.Command("nmap", host)
 	var stdout bytes.Buffer
@@ -33,7 +40,8 @@ func Run(host string) string {
 	return stdOut
 }
 
-func Grep(output string) string {
+// Parse the nmap result
+func Parse(output string) string {
 	portsRegex := regexp.MustCompilePOSIX("^[0-9]*")
 	return strings.Join(removeEmptyStrings(portsRegex.FindAllString(output, -1)), " ")
 }
@@ -63,7 +71,8 @@ func convertStringToInt(ports string) []int {
 	return portsInteger
 }
 
-func analyseResults(expectedPorts []int, foundPorts []int) ([]int, []int) {
+// AnalyseResults analyse the result of parse
+func AnalyseResults(expectedPorts []int, foundPorts []int) ([]int, []int) {
 	expectedUnfound := compare(expectedPorts, foundPorts)
 	unexpectedFound := compare(foundPorts, expectedPorts)
 	return expectedUnfound, unexpectedFound
@@ -96,24 +105,4 @@ func compare(X, Y []int) []int {
 		}
 	}
 	return difference
-}
-
-func message(expectedUnfoundPorts []int, unexpectedFoundPorts []int) string {
-	var message string
-
-	if len(expectedUnfoundPorts) > 0 {
-		message += fmt.Sprintf(
-			"The following ports were found filtered but were expected to be unfiltered:\n%d.\n\n",
-			expectedUnfoundPorts,
-		)
-	}
-
-	if len(unexpectedFoundPorts) > 0 {
-		message += fmt.Sprintf(
-			"The following ports were found unfiltered and are not part of the expected set:\n%d.\n\n",
-			unexpectedFoundPorts,
-		)
-	}
-
-	return message
 }

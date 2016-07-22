@@ -5,20 +5,20 @@ import (
 	"testing"
 )
 
-type testGrep struct {
+type testParse struct {
 	input  string
 	output string
 }
 
-var grepTests = []testGrep{
+var parseTests = []testParse{
 	{"22/tcp open  ssh", "22"},
 	{"80/tcp open  http", "80"},
 	{"\n100hdsajkds\nlkhjfd hhegdsk\n9\rsld", "100 9"},
 }
 
-func TestGrep(t *testing.T) {
-	for _, test := range grepTests {
-		output := grep(test.input)
+func TestParse(t *testing.T) {
+	for _, test := range parseTests {
+		output := Parse(test.input)
 		if test.output != output {
 			t.Error(
 				"For", test.input,
@@ -104,7 +104,7 @@ var comparePortsTests = []testComparePorts{
 
 func TestComparePorts(t *testing.T) {
 	for _, test := range comparePortsTests {
-		expectedUnfound, unexpectedFound := analyseResults(test.expected, test.found)
+		expectedUnfound, unexpectedFound := AnalyseResults(test.expected, test.found)
 		foundEuf := fmt.Sprintf("%v", expectedUnfound) != fmt.Sprintf("%v", test.expectedUnfound)
 		foundUef := fmt.Sprintf("%v", unexpectedFound) != fmt.Sprintf("%v", test.unexpectedFound)
 		if foundEuf || foundUef {
@@ -116,4 +116,3 @@ func TestComparePorts(t *testing.T) {
 		}
 	}
 }
-
