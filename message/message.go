@@ -1,4 +1,4 @@
-package nmap
+package message
 
 import "fmt"
 
