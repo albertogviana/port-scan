@@ -1,0 +1,9 @@
+kraken:
+  hosts:
+    - hostname: host01.test.com
+      port:
+        - 80
+        - 443
+    - hostname: host02.test.com
+      port:
+        - 22

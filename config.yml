@@ -1,0 +1,6 @@
+firewall:
+  hosts:
+    - hostname: host01.example.com
+      port:
+        - 80
+        - 443
