@@ -14,7 +14,7 @@ type Config struct {
 // File represents a YAML configuration file that namespaces all Kraken
 // configuration under the top-level "kraken" key.
 type File struct {
-	Kraken Config `yaml:"kraken"`
+	PortScan Config `yaml:"port_scan"`
 }
 
 // HostConfiguration has all hosts that should be checked
@@ -43,7 +43,7 @@ func Load(path string) (config *Config, err error) {
 		return
 	}
 
-	config = &configFile.Kraken
+	config = &configFile.PortScan
 
 	return
 }

@@ -1,4 +1,4 @@
-kraken:
+port_scan:
   hosts:
     - hostname: host01.test.com
       port:

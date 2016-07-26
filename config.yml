@@ -1,4 +1,4 @@
-firewall:
+port_scan:
   hosts:
     - hostname: host01.example.com
       port:
