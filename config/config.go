@@ -8,19 +8,28 @@ import (
 
 // Config is the global configuration for an instance.
 type Config struct {
-	Hosts []HostConfiguration
+	WaitNextCheck int `yaml:"wait_time_next_check"`
+	Slack         SlackConfiguration
+	Hosts         []HostConfiguration
 }
 
 // File represents a YAML configuration file that namespaces all Kraken
 // configuration under the top-level "kraken" key.
 type File struct {
-	PortScan Config `yaml:"port_scan"`
+	PortScan Config `yaml:"sherlock"`
 }
 
 // HostConfiguration has all hosts that should be checked
 type HostConfiguration struct {
 	Hostname string
 	Port     []string
+}
+
+type SlackConfiguration struct {
+	Token     string
+	Username  string
+	IconEmoji string
+	Channel   string
 }
 
 // Load the configuration

@@ -6,4 +6,6 @@ Port-scan depends on `gopkg.in/yaml.v2`, to install  it, run:
 
 ```bash
 go get gopkg.in/yaml.v2
+go get github.com/nlopes/slack
+
 ```

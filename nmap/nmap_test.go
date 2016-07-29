@@ -68,7 +68,7 @@ var stringToIntTests = []testStringToIntSlice{
 
 func TestConvertStringToInt(t *testing.T) {
 	for _, test := range stringToIntTests {
-		converted := convertStringToInt(test.str)
+		converted := ConvertStringToInt(test.str)
 		convertedString := fmt.Sprintf("%d", converted)
 		testString := fmt.Sprintf("%d", test.ints)
 		if convertedString != testString {
