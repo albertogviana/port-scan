@@ -1,4 +1,10 @@
-port_scan:
+sherlock:
+  wait_time_next_check: 3600
+  slack:
+    token: MyToken123456
+    username: my-bot
+    iconEmoji: ":helmet_with_white_cross:"
+    channel: my-channel
   hosts:
     - hostname: host01.example.com
       port:
