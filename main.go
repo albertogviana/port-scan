@@ -1,9 +1,9 @@
 package main
 
 import (
-	"./app"
-	"./config"
 	"fmt"
+	"github.com/albertogviana/port_scan/app"
+	"github.com/albertogviana/port_scan/config"
 	"os"
 )
 

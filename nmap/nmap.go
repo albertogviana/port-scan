@@ -57,6 +57,7 @@ func removeEmptyStrings(strings []string) []string {
 	return ports
 }
 
+// ConvertStringToInt convert a string to a int type
 func ConvertStringToInt(ports string) []int {
 	portsSlice := strings.Fields(ports)
 	portsInteger := []int{}

@@ -1,18 +1,19 @@
 package app
 
 import (
-	"../config"
-	"../nmap"
-	"../message"
 	"fmt"
+	"github.com/albertogviana/port_scan/config"
+	"github.com/albertogviana/port_scan/message"
+	"github.com/albertogviana/port_scan/nmap"
+	"github.com/nlopes/slack"
 	"log"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
-	"github.com/nlopes/slack"
 )
 
+// Run the application
 func Run(config *config.Config) {
 	handler(config)
 }
@@ -30,7 +31,7 @@ func handler(config *config.Config) {
 	}
 }
 
-func checkPorts(host config.HostConfiguration, config *config.SlackConfiguration, wg *sync.WaitGroup) {
+func checkPorts(host config.HostConfiguration, config config.SlackConfiguration, wg *sync.WaitGroup) {
 	defer wg.Done()
 	ports := nmap.Run(host.Hostname)
 	foundPorts := nmap.ConvertStringToInt(nmap.Parse(ports))
@@ -59,7 +60,7 @@ func convertStringToInt(ports []string) []int {
 	return portsInteger
 }
 
-func sendMessage(message string, config *config.SlackConfiguration) {
+func sendMessage(message string, config config.SlackConfiguration) {
 	api := slack.New(config.Token)
 	params := slack.PostMessageParameters{}
 	params.Username = config.Username

@@ -21,7 +21,7 @@ var buildMessageTests = []testMessage{
 
 func TestBuildMessage(t *testing.T) {
 	for _, test := range buildMessageTests {
-		message := BuildMessage(test.hostname,test.expectedUnfoundPorts, test.unexpectedFoundPorts)
+		message := BuildMessage(test.hostname, test.expectedUnfoundPorts, test.unexpectedFoundPorts)
 		if fmt.Sprintf(test.output) != message {
 			t.Error(
 				"For: \n", test.output,

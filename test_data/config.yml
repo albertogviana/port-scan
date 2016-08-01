@@ -4,7 +4,7 @@ sherlock:
     token: 12345token
     username: my-bot
     iconEmoji: ":helmet_with_white_cross:"
-      channel: "my-channel"
+    channel: "my-channel"
   hosts:
     - hostname: host01.test.com
       port:
